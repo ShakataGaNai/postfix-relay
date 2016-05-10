@@ -1,0 +1,65 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+
+
+# Debian specific:  Specifying a file name will cause the first
+# line of that file to be used as the name.  The Debian default
+# is /etc/mailname.
+#myorigin = /etc/mailname
+
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+# Uncomment the next line to generate "delayed mail" warnings
+#delay_warning_time = 4h
+readme_directory = no
+
+# TLS parameters
+smtpd_tls_cert_file=/etc/letsencrypt/live/my.server.tld/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/my.server.tld/privkey.pem
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_loglevel=2
+smtpd_tls_received_header = yes
+smtpd_tls_security_level = encrypt
+
+# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
+# information on enabling SSL in the smtp client.
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = m.server.tld
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = localhost, localhost.localdomain, localhost
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 64.18.0.0/20 64.233.160.0/19 66.102.0.0/20 66.249.80.0/20 72.14.192.0/18 74.125.0.0/16 108.177.8.0/21 172.217.0.0/19 173.194.0.0/16 207.126.144.0/20 209.85.128.0/17 216.58.192.0/19 216.239.32.0/19 [2001:4860:4000::]/36 [2404:6800:4000::]/36 [2607:f8b0:4000::]/36 [2800:3f0:4000::]/36 [2a00:1450:4000::]/36 [2c0f:fb50:4000::]/36
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+
+header_checks = regexp:/etc/postfix/header_checks
+
+smtp_sasl_auth_enable = yes 
+smtp_sasl_password_maps = static:SMTP_Injection:PASSSSSSWORRDDDDDDDDDD
+relayhost = [smtp.sparkpostmail.com]:587
+smtp_sasl_security_options = noanonymous 
+smtp_tls_security_level = encrypt
+header_size_limit = 4096000
+
+smtpd_sender_restrictions =
+   check_sender_access hash:/etc/postfix/sender_checks,
+   permit_sasl_authenticated,
+   permit_mynetworks,
+   reject_non_fqdn_sender,
+   reject_unknown_sender_domain,
+   reject
+
+smtpd_recipient_restrictions = 
+   check_recipient_access hash:/etc/postfix/recipient_checks,
+   reject
+
+body_checks = regexp:/etc/postfix/body_checks

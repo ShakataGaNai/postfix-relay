@@ -1,0 +1,3 @@
+cooldomain.com		OK
+baddomain.com		REJECT Very specifically denied domain for some special reason
+okuser@baddomain.com	OK

@@ -1,0 +1,2 @@
+/From: (.*)<(.*)@local\.tld>/ REPLACE From: $1<$2@mydomain.com>
+/From: (.*)@local\.tld/ REPLACE From: $1@mydomain.com
